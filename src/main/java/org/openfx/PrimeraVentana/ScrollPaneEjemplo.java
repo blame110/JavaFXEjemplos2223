@@ -8,12 +8,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class VentanaGrid extends Application {
+public class ScrollPaneEjemplo extends Application {
 
 	@Override
 	public void start(Stage stage) {
@@ -22,12 +23,29 @@ public class VentanaGrid extends Application {
 		// Este panel es como una tabla
 		GridPane panelGrid = new GridPane();
 
+		// Creamos un ScrollPane para contener dentro
+		// El grid pane
+		ScrollPane scroll = new ScrollPane();
+		// Metemos dentro del scrollpane el gridpane
+		scroll.setContent(panelGrid);
+
+		Label lblId = new Label("Id:");
+		Label lblAltura = new Label("Altura:");
+
 		Label lblNombre = new Label("Nombre:");
 		Label lblSexo = new Label("Sexo:");
 		Label lblEdad = new Label("Edad:");
 		Label lblBoletin = new Label("Acepto las condiciones,\n os pago lo que sea");
 
 		TextField txtNombre = new TextField();
+		TextField txtId = new TextField();
+
+		// Deshabilitamos el id
+		txtId.setEditable(false);
+		txtId.setText("1");
+
+		TextField txtAltura = new TextField();
+
 		CheckBox chkBoletin = new CheckBox();
 		// Dejamos marcado por defecto el checkbox del boletin
 		chkBoletin.setSelected(true);
@@ -55,24 +73,34 @@ public class VentanaGrid extends Application {
 		// Añadimos los controles al grid
 
 		// Primera fila
-		panelGrid.add(lblNombre, 0, 0);
-		panelGrid.add(txtNombre, 1, 0, 2, 1);
+		panelGrid.add(lblId, 0, 0);
+		panelGrid.add(txtId, 1, 0, 2, 1);
 
 		// Segunda Fila
-		panelGrid.add(lblSexo, 0, 1);
-		panelGrid.add(radMujer, 1, 1);
-		panelGrid.add(radHombre, 2, 1);
+		panelGrid.add(lblNombre, 0, 1);
+		panelGrid.add(txtNombre, 1, 1, 2, 1);
 
 		// Tercera Fila
-		panelGrid.add(lblEdad, 0, 2);
-		panelGrid.add(chEdad, 1, 2);
+		panelGrid.add(lblAltura, 0, 2);
+		panelGrid.add(txtAltura, 1, 2, 2, 1);
 
 		// Cuarta Fila
-		panelGrid.add(lblBoletin, 0, 3);
-		panelGrid.add(chkBoletin, 1, 3);
+		panelGrid.add(lblSexo, 0, 3);
+		panelGrid.add(radMujer, 1, 3);
+		panelGrid.add(radHombre, 2, 3);
+		// Marcamos por defecto el radio de mujer
+		radMujer.setSelected(true);
 
-		// Quinta fila
-		panelGrid.add(btnAceptar, 0, 4, 4, 1);
+		// Quinta Fila
+		panelGrid.add(lblEdad, 0, 4);
+		panelGrid.add(chEdad, 1, 4);
+
+		// Sexta Fila
+		panelGrid.add(lblBoletin, 0, 5);
+		panelGrid.add(chkBoletin, 1, 5);
+
+		// Septima fila
+		panelGrid.add(btnAceptar, 0, 6, 4, 1);
 
 		// Ponemos margen en todas las celdas
 		panelGrid.setVgap(10);
@@ -82,7 +110,7 @@ public class VentanaGrid extends Application {
 		panelGrid.setAlignment(Pos.TOP_CENTER);
 
 		// La scene contiene los panel
-		var scene = new Scene(panelGrid, 400, 300);
+		var scene = new Scene(scroll, 400, 300);
 
 		// El stage es el contenido global de la ventana
 		stage.setScene(scene);
