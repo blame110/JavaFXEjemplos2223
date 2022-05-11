@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,11 +20,11 @@ import tema5.JugadorVO;
 
 public class TabPaneEventos extends Application {
 
+	// Creamos una lista de jugadores vacios
+	private ArrayList<JugadorVO> listaJugadores = new ArrayList<JugadorVO>();
+
 	@Override
 	public void start(Stage stage) {
-
-		// Creamos una lista de jugadores vacios
-		ArrayList<JugadorVO> listaJugadores = new ArrayList<JugadorVO>();
 
 		// Creamos un panel de pestañas
 		TabPane panelPestanas = new TabPane();
@@ -68,12 +70,14 @@ public class TabPaneEventos extends Application {
 		pestana2.setContent(panelBotones);
 
 		// Cargamos desde BD los datos de todos los jugadores
-		listaJugadores = JugadorDAO.mostrarJugadoresLista();
+		listaJugadores = JugadorDAO.cargarListaJugadores();
 		JugadorVO jugador = new JugadorVO();
 
 		Iterator<JugadorVO> itr = listaJugadores.iterator();
 		// Cargo en jugador el primer jugador de la lista
 		jugador = itr.next();
+		// Vamos rellenando el desplegable con todos los elementos de la
+		// arraylist de jugadores
 		while (itr.hasNext()) {
 			chJugador.getItems().add(jugador.getNombre());
 
@@ -81,6 +85,38 @@ public class TabPaneEventos extends Application {
 			jugador = itr.next();
 
 		}
+		// Añadimos un evento al desplegable (choicebox) cuando selecionamos algo
+		chJugador.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+
+				// Selecionamos la primera pestaña del tabpane utilizando
+				// el selectionmodel del panel de pestañas
+				panelPestanas.getSelectionModel().select(0);
+
+				// Recuperamos el indice del elementeo seleccionado en el
+				// choicebox
+				int posicion = chJugador.getSelectionModel().getSelectedIndex();
+
+				// Cargamos el jugador desde el arraylist con la posicion
+				// Selecionada del choicebox que coincide con la posicion
+				// del jugador seleccionado
+				JugadorVO jugador = listaJugadores.get(posicion);
+
+				// Asignamos lo datos del jugador a los diferentes controles/campos
+				// del formulario de jugadores
+				fJugador.txtNombre.setText(jugador.getNombre());
+
+				if (jugador.getSexo().equals("M"))
+					fJugador.radHombre.setSelected(true);
+				else
+					fJugador.radMujer.setSelected(true);
+
+				fJugador.chEdad.getSelectionModel().select(jugador.getEdad());
+
+				System.out.println(jugador.toString());
+
+			}
+		});
 
 		// En la pestaña 3 ponemos el select
 		pestana3.setContent(chJugador);
